@@ -1,0 +1,49 @@
+public class MilliSecondDiffClass {	
+	
+	public static Datetime convertStringToDateTime(String inputString) {
+		Datetime outputDateTime = null;
+
+		if(inputString != null) {
+			outputDateTime = (DateTime)json.deserialize('"' + inputString + '"', Datetime.class);
+		}
+
+		system.debug('outputDateTime::'+outputDateTime);
+		
+		return outputDateTime;
+	}
+	
+	Public static void millisecondDiff(String milliOne, String milliTwo) {
+	
+    	// Date Time logic to compare the time upto milliseconds
+        //String milliOne = '2013-08-20T05:06:44.160566Z';
+    	//String milliTwo = '2013-08-20T05:06:44.160568Z';
+    	
+    	// Checking in system and  in api call time updated string exists
+    	if(milliOne != null && milliTwo != null) {
+			DateTime sysTimeUpdated = convertStringToDateTime(milliOne);
+			DateTime currentTimeUpdated = convertStringToDateTime(milliTwo);
+
+			Datetime sysTU = Datetime.newInstance(sysTimeUpdated.year(), sysTimeUpdated.month(), sysTimeUpdated.day(), 
+									sysTimeUpdated.hour(), sysTimeUpdated.minute(), sysTimeUpdated.second());
+			Datetime cTU = Datetime.newInstance(currentTimeUpdated.year(), currentTimeUpdated.month(), currentTimeUpdated.day(), 
+									currentTimeUpdated.hour(), currentTimeUpdated.minute(), currentTimeUpdated.second());
+			
+			// Getting milliseconds using substring of time update string
+			Integer sysMilli = Integer.valueOf(milliOne.substring(milliOne.indexOf('.')+1, milliOne.indexOf('Z')));
+			Integer currMilli = Integer.valueOf(milliTwo.substring(milliTwo.indexOf('.')+1, milliTwo.indexOf('Z')));
+
+			// If diff is in years/months/hours/mins/secs
+			if(sysTU.getTime() < cTU.getTime()) {
+				System.debug('Diffence in days, hours, mins, sec '+ (cTU.getTime() - sysTU.getTime()));
+			} 
+			// If diff is in millisecs
+			else if((sysTU.getTime() == cTU.getTime() && sysMilli < currMilli)) {
+			    System.debug('Diffence in MilliSec '+ (currMilli - sysMilli));
+			}
+			
+			else {
+				System.debug('No Difference');
+			}
+    	}
+	}
+}
